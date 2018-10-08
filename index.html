@@ -1,19 +1,24 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>A few scales on the fretboard</title>
-    </head>
-    <body>
-        <h1>A few scales</h1>
-        <p>
-            <canvas id="theCanvas" width="1000" height="90" style="border:0px solid #000000;">
-                Does yout browser support the canvas tag?
-            </canvas>
-        </p>
-        <script src="js/scales.js"> </script>
-        <script >
 
+<head>
+    <title>A few scales on the fretboard</title>
+</head>
+
+<body>
+    <h1>A few scales</h1>
+    <p>
+        <canvas id="theCanvas" width="1000" height="90" style="border:0px solid #000000;">
+            Does yout browser support the canvas tag?
+        </canvas>
+
+    </p>
+    <script src="js/scales.js"> </script>
+    <script>
+        window.onload = function () {
             const fretboard = new Fretboard(document.getElementById('theCanvas'));
+        };
+
 
 
             // // major scale at thid fret, spanning two octaves
@@ -28,6 +33,8 @@
             // // hexatonic scale at eighteenth fret starting on A string
             // fretboard.drawScale(scale.hexatonic, 18, 5, 7);
 
-        </script>
-    </body>
+    </script>
+    <img style="display: none;" id="image" width="300" height="300" src="./texture.jpg">
+</body>
+
 </html>

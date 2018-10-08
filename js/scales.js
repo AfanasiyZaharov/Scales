@@ -54,10 +54,9 @@ class Fretboard {
       return accum;
     }, 0);
 
-    var from = this.width;
+    var from = this.width - 3;
 
     const updatedResArrayOfWidthAndStart = [];
-
 
     for (let i = resArrayOfWidthAndStart.length - 1; i >= 0; i--) {
       const elem = resArrayOfWidthAndStart[i];
@@ -81,6 +80,10 @@ class Fretboard {
       this.frets.push(newFret);
     }
     this.frets.forEach(this.drawFret);
+
+    const ctx = this.canvas.getContext('2d');
+    ctx.fillStyle = theme.fret;
+    ctx.fillRect(0, 0, 3, this.canvas.height);
   }
 }
 
@@ -103,7 +106,10 @@ class Fret {
   draw() {
     // the neck
     this.ctx.fillStyle = theme.neck; //"#807050";
-    this.ctx.fillRect(this.start, 0, this.width, this.canvas.height);
+    // this.ctx.fillRect(this.start, 0, this.width, this.canvas.height);
+    const texture = document.getElementById('image');
+    this.ctx.drawImage(texture, this.start, 0, this.width - 3, this.canvas.height);
+
     // the dot
     if (this.dot == true) {
       if (this.doubleDot) {
@@ -122,16 +128,14 @@ class Fret {
         this.ctx.fill();
         this.ctx.closePath();
       }
-
     }
     // the nut
     this.ctx.fillStyle = theme.fret;
     this.ctx.fillRect(this.start + this.width - 3, 0, 3, this.canvas.height);
+    var img = document.getElementById("image");
     // the strings
     this.ctx.fillStyle = theme.string;
     for (let string = 6; string > 0; string--) {
-      // debugger;
-      // console.log('string ', string, this.findString(string));
       this.ctx.fillRect(this.start, this.findString(string), this.width, (0.5 + (string / 4)));
     }
   }
@@ -147,7 +151,8 @@ class Fret {
   }
 
   findString(number) {
-    return -8 + 15 * number;
+    const newNumber = 7 - number;
+    return -8 + 15 * newNumber;
   }
 }
 
