@@ -5,24 +5,25 @@ const { createStore } = Redux;
 const initialState = {
   selectedFrets: [],
   selectedStrings: [],
-  colorSelectedFrets: 'rgba(0,0,255, 0.3)',
-  colorSelectedStrings: 'rgba(250,0,0, 0.3)',
+  colorSelectedFrets: 'rgba(0,0,255, 0.2)',
+  colorSelectedStrings: 'rgba(250,0,0, 0.2)',
 };
 
-const dataReducer = (state, { type, payload }) => {
+const dataReducer = (state = initialState, { type, payload }) => {
+  console.log('update state', state, type, payload);
   switch (type) {
-    case type === types.ADD_HIGHLIGHTS:
+    case window.types.ADD_HIGHLIGHTS:
       return {
         ...state,
         selectedFrets: [...state.selectedFrets, payload],
       };
 
-    case type === types.ADD_SELECTION_STRING:
+    case window.types.ADD_SELECTION_STRING:
       return {
         ...state,
         selectedStrings: [...state.selectedStrings, payload],
       };
-    case type === types.REMOVE_ALL_SELECTION:
+    case window.types.REMOVE_ALL_SELECTION:
       return {
         ...state,
         selectedStrings: [],

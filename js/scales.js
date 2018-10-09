@@ -88,10 +88,7 @@ class Fretboard {
 
   findClickedFretString(canvasCoords) {
     let { x, y } = canvasCoords;
-    console.log('this frets', this.frets);
     for (let i = 0; i < this.frets.length; i++) {
-
-      console.log('frets', this.frets[i], x);
 
       if ((i + 1) === this.frets.length) {
         return this.frets[i].getStringFret(canvasCoords);
@@ -114,11 +111,26 @@ class Fret {
     this.doubleDot;
     this.fretNumber = fretNumber;
     this.ctx = canvas.getContext('2d');
-
+    this.highlightedStrings = [];
     window.store.subscribe(() => {
       const newState = store.getState();
+      console.log('stateUpdated', newState);
+      newState.selectedFrets.forEach((elem) => {
+        if (elem.fret === this.fretNumber && !this.highlightedStrings.includes(elem.string)) {
+          this.renderStringSelection(elem.string, newState.colorSelectedFrets);
+          this.highlightedStrings.push(elem.string);
+        }
+      });
+
 
     });
+  }
+
+
+  renderStringSelection(stringNumber, color) {
+    this.ctx.fillStyle = color;
+    const stringStartedDrawIndex = this.findString(stringNumber) - 7;
+    this.ctx.fillRect(this.start, stringStartedDrawIndex, this.width - 3, 14);
   }
 
   getStringFret(coords) {
@@ -130,17 +142,23 @@ class Fret {
         return { fret: this.fretNumber, string };
       }
 
-      if (coords.y > this.findString(string)) {
-        if (coords.y - this.findString(string) <= 14) {
+      console.log('string ', string, coords.y, this.findString(string));
+
+      if (coords.y < this.findString(string)) {
+        if (this.findString(string) - coords.y <= 7) {
           return { fret: this.fretNumber, string };
         }
       }
 
-      if (coords.y < this.findString(string)) {
-        if (this.findString(string) - coords.y <= 14) {
+      if (coords.y > this.findString(string)) {
+
+
+        if (coords.y - this.findString(string) <= 7) {
           return { fret: this.fretNumber, string };
         }
       }
+
+
 
 
       // if (string - 1 === 0) {

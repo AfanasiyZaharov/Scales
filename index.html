@@ -26,8 +26,10 @@
       elem.addEventListener('click', (event) => {
         const x = event.pageX - elemLeft;
         const y = event.pageY - elemTop;
-        console.log(x, y);
-        console.log(fretboard.findClickedFretString({ x, y }));
+        const result = fretboard.findClickedFretString({ x, y });
+
+        window.store.dispatch(window.actions.addHighlights(result.fret, result.string));
+
       });
     };
 
