@@ -2,24 +2,34 @@
 <html>
 
 <head>
-    <title>A few scales on the fretboard</title>
+  <title>A few scales on the fretboard</title>
 </head>
 
 <body>
-    <h1>A few scales</h1>
-    <p>
-        <canvas id="theCanvas" width="1000" height="90" style="border:0px solid #000000;">
-            Does yout browser support the canvas tag?
-        </canvas>
+  <h1>A few scales</h1>
+  <p>
+    <canvas id="theCanvas" width="1000" height="90" style="border:0px solid #000000;">
+      Does yout browser support the canvas tag?
+    </canvas>
 
-    </p>
-    <script src="js/redux.min.js"></script>
-    <script src="js/store.js"> </script>
-    <script src="js/scales.js"> </script>
-    <script>
-        window.onload = function () {
-            const fretboard = new Fretboard(document.getElementById('theCanvas'));
-        };
+  </p>
+  <script src="js/redux.min.js"></script>
+  <script src="js/store.js"> </script>
+  <script src="js/scales.js"> </script>
+  <script>
+    window.onload = function () {
+      const fretboard = new Fretboard(document.getElementById('theCanvas'));
+
+      const elem = document.getElementById('theCanvas');
+      const elemLeft = elem.offsetLeft;
+      const elemTop = elem.offsetTop;
+      elem.addEventListener('click', (event) => {
+        const x = event.pageX - elemLeft;
+        const y = event.pageY - elemTop;
+        console.log(x, y);
+        console.log(fretboard.findClickedFretString({ x, y }));
+      });
+    };
 
 
 
@@ -35,8 +45,8 @@
             // // hexatonic scale at eighteenth fret starting on A string
             // fretboard.drawScale(scale.hexatonic, 18, 5, 7);
 
-    </script>
-    <img style="display: none;" id="image" width="300" height="300" src="./texture.jpg">
+  </script>
+  <img style="display: none;" id="image" width="300" height="300" src="./texture.jpg">
 </body>
 
 </html>

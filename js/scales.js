@@ -38,7 +38,7 @@ class Fretboard {
       }
     } while (string >= 0 && --span > 0);
   }
-
+  // magic
   drawFretboard() {
     // inizializza i Frets
     var from = this.width;
@@ -67,7 +67,7 @@ class Fretboard {
 
     for (let i = this.numberOfFrets; i > 0; i--) {
       const NeededFret = updatedResArrayOfWidthAndStart.find((elem) => elem.fretNumber === i);
-      const newFret = new Fret(NeededFret.start, NeededFret.width, this.canvas);
+      const newFret = new Fret(NeededFret.start, NeededFret.width, this.canvas, i);
       // this.frets.push();
       if ([3, 5, 7, 9, 12, 15, 17, 19, 21, 24].indexOf(i) >= 0) {
         newFret.dot = true;
@@ -85,16 +85,75 @@ class Fretboard {
     ctx.fillStyle = theme.fret;
     ctx.fillRect(0, 0, 3, this.canvas.height);
   }
+
+  findClickedFretString(canvasCoords) {
+    let { x, y } = canvasCoords;
+    console.log('this frets', this.frets);
+    for (let i = 0; i < this.frets.length; i++) {
+
+      console.log('frets', this.frets[i], x);
+
+      if ((i + 1) === this.frets.length) {
+        return this.frets[i].getStringFret(canvasCoords);
+      }
+
+      if ((this.frets[i].start <= x) && this.frets[i + 1].start > x) {
+        return this.frets[i].getStringFret(canvasCoords);
+      }
+    }
+  }
+
 }
 
 class Fret {
-  constructor(start, width, canvas, dot) {
+  constructor(start, width, canvas, fretNumber) {
     this.start = start;
     this.width = width;
     this.canvas = canvas;
-    this.dot = dot;
+    this.dot;
     this.doubleDot;
+    this.fretNumber = fretNumber;
     this.ctx = canvas.getContext('2d');
+
+    window.store.subscribe(() => {
+      const newState = store.getState();
+
+    });
+  }
+
+  getStringFret(coords) {
+    console.log(this.fretNumber, 'coords ', coords);
+
+    for (let string = 6; string > 0; string--) {
+
+      if (coords.y === this.findString(string)) {
+        return { fret: this.fretNumber, string };
+      }
+
+      if (coords.y > this.findString(string)) {
+        if (coords.y - this.findString(string) <= 14) {
+          return { fret: this.fretNumber, string };
+        }
+      }
+
+      if (coords.y < this.findString(string)) {
+        if (this.findString(string) - coords.y <= 14) {
+          return { fret: this.fretNumber, string };
+        }
+      }
+
+
+      // if (string - 1 === 0) {
+      //   return { fret: this.fretNumber, string };
+      // }
+
+      // console.log(this.findString(string), coords.y);
+
+      // if (this.findString(string) <= coords.y && this.findString(string - 1) > coords.y) {
+      //   return { fret: this.fretNumber, string };
+      // }
+    }
+
   }
 
   findCoordsTwoDots() {
