@@ -7,6 +7,9 @@ const initialState = {
   selectedStrings: [],
   colorSelectedFrets: 'rgba(0,0,255, 0.2)',
   colorSelectedStrings: 'rgba(250,0,0, 0.2)',
+
+  selectFretsMode: false,
+  selectNotesMode: false,
 };
 
 const dataReducer = (state = initialState, { type, payload }) => {
@@ -29,6 +32,20 @@ const dataReducer = (state = initialState, { type, payload }) => {
         selectedStrings: [],
         selectedFrets: [],
       };
+
+    case window.types.TOGGLE_SELECT_NOTES_MODE:
+      return {
+        ...state,
+        selectNotesMode: !state.selectNotesMode,
+        selectFretsMode: false,
+      };
+    case window.types.TOGGLE_SELECT_FRETS_MODE:
+      return {
+        ...state,
+        selectNotesMode: false,
+        selectFretsMode: !state.selectFretsMode,
+      };
+
     default:
       return { ...state };
   }
@@ -38,14 +55,16 @@ window.types = {
   ADD_HIGHLIGHTS: 'ADD_HIGHLIGHTS',
   ADD_SELECTION_STRING: 'ADD_SELECTION_STRING',
   REMOVE_ALL_SELECTION: 'REMOVE_ALL_SELECTION',
+  TOGGLE_SELECT_NOTES_MODE: 'TOGGLE_SELECT_NOTES_MODE',
+  TOGGLE_SELECT_FRETS_MODE: 'TOGGLE_SELECT_FRETS_MODE',
 };
 
 window.actions = {
   addHighlights: (fret, string) => ({ type: types.ADD_HIGHLIGHTS, payload: { fret, string } }),
-  addSelectionString: (string, fret) => ({ type: types.ADD_SELECTION_STRING, payload: { string, fret } }),
+  addSelectionString: (fret, string) => ({ type: types.ADD_SELECTION_STRING, payload: { string, fret } }),
+  toggleSelectFretsMode: () => ({ type: window.types.TOGGLE_SELECT_FRETS_MODE }),
+  toggleSelectNotesMode: () => ({ type: window.types.TOGGLE_SELECT_NOTES_MODE }),
   removeAllSelection: () => ({ type: types.REMOVE_ALL_SELECTION }),
 }
-
-
 
 window.store = createStore(dataReducer);

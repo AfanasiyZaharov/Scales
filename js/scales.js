@@ -112,6 +112,7 @@ class Fret {
     this.fretNumber = fretNumber;
     this.ctx = canvas.getContext('2d');
     this.highlightedStrings = [];
+    this.markedStrings = [];
     window.store.subscribe(() => {
       const newState = store.getState();
       console.log('stateUpdated', newState);
@@ -122,6 +123,14 @@ class Fret {
         }
       });
 
+      newState.selectedStrings.forEach((elem) => {
+
+        if (elem.fret === this.fretNumber && !this.markedStrings.includes(elem.string)) {
+          this.mark(elem.string, newState.colorSelectedStrings);
+          this.markedStrings.push(elem.string);
+        }
+
+      });
 
     });
   }
@@ -225,11 +234,38 @@ class Fret {
     this.ctx.fillStyle = color;
     this.ctx.arc(this.start + this.width / 2, this.findString(string), 7, 0, 2 * Math.PI);
     this.ctx.fill();
+    this.ctx.fillStyle = 'black';
+    this.ctx.font = "10px Arial";
+    this.findStringNote(string);
+    this.ctx.fillText("C", this.start + this.width / 2 - 4, this.findString(string) + 4);
   }
 
   findString(number) {
     const newNumber = 7 - number;
     return -8 + 15 * newNumber;
+  }
+
+  findStringNote(stringNumber) {
+    const notes = [
+      "C",
+      "C#",
+      "D",
+      "D#",
+      "E",
+      "F",
+      "F#",
+      "G",
+      "G#",
+      "A",
+      "A#",
+      "B"
+    ];
+
+    const startIndex = 5;
+
+    const resultIndex = startIndex + (6 - stringNumber) * 5;
+    console.log('resultIndex ', resultIndex % 11);
+
   }
 }
 

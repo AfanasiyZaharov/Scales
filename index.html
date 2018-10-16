@@ -16,6 +16,7 @@
   <script src="js/redux.min.js"></script>
   <script src="js/store.js"> </script>
   <script src="js/scales.js"> </script>
+  <link rel="stylesheet" href="main.css" />
   <script>
     window.onload = function () {
       const fretboard = new Fretboard(document.getElementById('theCanvas'));
@@ -24,16 +25,33 @@
       const elemLeft = elem.offsetLeft;
       const elemTop = elem.offsetTop;
       elem.addEventListener('click', (event) => {
-        const x = event.pageX - elemLeft;
-        const y = event.pageY - elemTop;
-        const result = fretboard.findClickedFretString({ x, y });
+        if (window.store.getState().selectFretsMode) {
+          const x = event.pageX - elemLeft;
+          const y = event.pageY - elemTop;
+          const result = fretboard.findClickedFretString({ x, y });
 
-        window.store.dispatch(window.actions.addHighlights(result.fret, result.string));
+          window.store.dispatch(window.actions.addHighlights(result.fret, result.string));
+        }
+
+        if (window.store.getState().selectNotesMode) {
+          const x = event.pageX - elemLeft;
+          const y = event.pageY - elemTop;
+          const result = fretboard.findClickedFretString({ x, y });
+
+          window.store.dispatch(window.actions.addSelectionString(result.fret, result.string));
+        }
 
       });
+
+      document.querySelectorAll('#select_frets')[0].addEventListener('click', (event) => {
+
+        window.store.dispatch(window.actions.toggleSelectFretsMode());
+      });
+
+      document.querySelectorAll('#select_notes')[0].addEventListener('click', (event) => {
+        window.store.dispatch(window.actions.toggleSelectNotesMode());
+      });
     };
-
-
 
             // // major scale at thid fret, spanning two octaves
             // fretboard.drawScale(scale.major, 2, 6, 15);
@@ -49,6 +67,11 @@
 
   </script>
   <img style="display: none;" id="image" width="300" height="300" src="./texture.jpg">
+
+  <button id="select_frets" class="button">Select Frets Mode</button>
+
+  <button id="select_notes" class="button">Select Notes Mode</button>
+
 </body>
 
 </html>
