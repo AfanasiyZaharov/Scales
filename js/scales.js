@@ -68,7 +68,7 @@ class Fretboard {
     for (let i = this.numberOfFrets; i > 0; i--) {
       const NeededFret = updatedResArrayOfWidthAndStart.find((elem) => elem.fretNumber === i);
       const newFret = new Fret(NeededFret.start, NeededFret.width, this.canvas, i);
-      // this.frets.push();
+
       if ([3, 5, 7, 9, 12, 15, 17, 19, 21, 24].indexOf(i) >= 0) {
         newFret.dot = true;
         if (i === 12 || i === 24) {
@@ -115,7 +115,6 @@ class Fret {
     this.markedStrings = [];
     window.store.subscribe(() => {
       const newState = store.getState();
-      console.log('stateUpdated', newState);
       newState.selectedFrets.forEach((elem) => {
         if (elem.fret === this.fretNumber && !this.highlightedStrings.includes(elem.string)) {
           this.renderStringSelection(elem.string, newState.colorSelectedFrets);
@@ -236,13 +235,31 @@ class Fret {
     this.ctx.fill();
     this.ctx.fillStyle = 'black';
     this.ctx.font = "10px Arial";
-    this.findStringNote(string);
-    this.ctx.fillText("C", this.start + this.width / 2 - 4, this.findString(string) + 4);
+    const text = this.findStringNote(string);
+    this.ctx.fillText(text, this.start + this.width / 2 - (text.length > 1 ? 6 : 3), this.findString(string) + 4);
   }
 
   findString(number) {
     const newNumber = 7 - number;
     return -8 + 15 * newNumber;
+  }
+
+
+  getBaseStringNoteIndex(stringNumber) {
+    switch (stringNumber) {
+      case 6:
+        return 4;
+      case 5:
+        return 9;
+      case 4:
+        return 2;
+      case 3:
+        return 7;
+      case 2:
+        return 11;
+      case 1:
+        return 4;
+    }
   }
 
   findStringNote(stringNumber) {
@@ -261,11 +278,11 @@ class Fret {
       "B"
     ];
 
-    const startIndex = 5;
+    const startIndex = 4;
 
-    const resultIndex = startIndex + (6 - stringNumber) * 5;
-    console.log('resultIndex ', resultIndex % 11);
-
+    const resultIndex = this.getBaseStringNoteIndex(stringNumber) + this.fretNumber;
+    console.log('note ', notes[resultIndex % 12]);
+    return notes[resultIndex % 12];
   }
 }
 

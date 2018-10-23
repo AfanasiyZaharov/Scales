@@ -5,8 +5,8 @@ const { createStore } = Redux;
 const initialState = {
   selectedFrets: [],
   selectedStrings: [],
-  colorSelectedFrets: 'rgba(0,0,255, 0.2)',
-  colorSelectedStrings: 'rgba(250,0,0, 0.2)',
+  colorSelectedFrets: 'rgba(0,0,255, 0.4)',
+  colorSelectedStrings: 'rgba(250,0,0, 0.8)',
 
   selectFretsMode: false,
   selectNotesMode: false,
